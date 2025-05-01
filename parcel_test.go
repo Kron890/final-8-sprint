@@ -83,11 +83,9 @@ func TestSetAddress(t *testing.T) {
 
 	// check
 	// получите добавленную посылку и убедитесь, что адрес обновился
-	clients, err := store.GetByClient(parcel.Client)
+	parcelGet, err := store.Get(parcel.Number)
 	require.NoError(t, err)
-	for _, client := range clients {
-		assert.NotEqual(t, parcel, client)
-	}
+	assert.NotEqual(t, parcel, parcelGet)
 }
 
 // TestSetStatus проверяет обновление статуса
@@ -111,11 +109,10 @@ func TestSetStatus(t *testing.T) {
 	require.NoError(t, err)
 	// check
 	// получите добавленную посылку и убедитесь, что статус обновился
-	clients, err := store.GetByClient(parcel.Client)
+	client, err := store.Get(parcel.Number)
 	require.NoError(t, err)
-	for _, client := range clients {
-		assert.NotEqual(t, parcel.Status, client.Status)
-	}
+	assert.NotEqual(t, parcel.Status, client.Status)
+
 }
 
 // TestGetByClient проверяет получение посылок по идентификатору клиента
@@ -156,7 +153,7 @@ func TestGetByClient(t *testing.T) {
 	// get by client
 	storedParcels, err := store.GetByClient(client)
 	require.NoError(t, err)
-	assert.Equal(t, len(parcels), len(storedParcels))
+	assert.Len(t, storedParcels, len(parcels))
 
 	// check
 	for _, parcel := range storedParcels {
